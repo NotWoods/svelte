@@ -328,13 +328,13 @@ function open(parser) {
 
 /** @param {import('../index.js').Parser} parser */
 function next(parser) {
-	const start = parser.index - 1;
+	const next_to_bracket = parser.index - 1;
 
 	const block = parser.current(); // TODO type should not be TemplateNode, that's much too broad
 
 	if (block.type === 'IfBlock') {
-		if (!parser.eat('else')) e.expected_token(start, '{:else} or {:else if}');
-		if (parser.eat('if')) e.block_invalid_elseif(start);
+		if (!parser.eat('else')) e.expected_token(next_to_bracket, '{:else} or {:else if}');
+		if (parser.eat('if')) e.block_invalid_elseif(next_to_bracket);
 
 		parser.allow_whitespace();
 
@@ -354,7 +354,7 @@ function next(parser) {
 
 			/** @type {ReturnType<typeof parser.append<import('#compiler').IfBlock>>} */
 			const child = parser.append({
-				start: parser.index,
+				start: next_to_bracket - 1,
 				end: -1,
 				type: 'IfBlock',
 				elseif: true,
@@ -376,7 +376,7 @@ function next(parser) {
 	}
 
 	if (block.type === 'EachBlock') {
-		if (!parser.eat('else')) e.expected_token(start, '{:else}');
+		if (!parser.eat('else')) e.expected_token(next_to_bracket, '{:else}');
 
 		parser.allow_whitespace();
 		parser.eat('}', true);
@@ -392,7 +392,7 @@ function next(parser) {
 	if (block.type === 'AwaitBlock') {
 		if (parser.eat('then')) {
 			if (block.then) {
-				e.block_duplicate_clause(start, '{:then}');
+				e.block_duplicate_clause(next_to_bracket, '{:then}');
 			}
 
 			if (!parser.eat('}')) {
@@ -411,7 +411,7 @@ function next(parser) {
 
 		if (parser.eat('catch')) {
 			if (block.catch) {
-				e.block_duplicate_clause(start, '{:catch}');
+				e.block_duplicate_clause(next_to_bracket, '{:catch}');
 			}
 
 			if (!parser.eat('}')) {
@@ -428,10 +428,10 @@ function next(parser) {
 			return;
 		}
 
-		e.expected_token(start, '{:then ...} or {:catch ...}');
+		e.expected_token(next_to_bracket, '{:then ...} or {:catch ...}');
 	}
 
-	e.block_invalid_continuation_placement(start);
+	e.block_invalid_continuation_placement(next_to_bracket);
 }
 
 /** @param {import('../index.js').Parser} parser */
