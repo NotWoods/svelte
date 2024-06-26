@@ -1,5 +1,15 @@
 # svelte
 
+## 5.0.0-next.167
+
+### Patch Changes
+
+- fix: make more types from `svelte/compiler` public ([#12189](https://github.com/sveltejs/svelte/pull/12189))
+
+- breaking: prevent usage of arguments keyword in certain places ([#12191](https://github.com/sveltejs/svelte/pull/12191))
+
+- fix: allow slot attribute inside snippets ([#12188](https://github.com/sveltejs/svelte/pull/12188))
+
 ## 5.0.0-next.166
 
 ### Patch Changes
